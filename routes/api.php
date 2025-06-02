@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Cache;
 
 
 
-Route::get('/test', function () {
-    return response()->json(['message' => 'API is working']);
-});
+// Route::get('/laravelapi-production-64b8.up.railway.app/test', function () {
+//     return response()->json(['message' => 'API is working']);
+// });
 
 Route::get('/user',[AuthController::class,'getUserData'])->middleware('auth:sanctum');
 
