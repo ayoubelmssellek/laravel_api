@@ -44,6 +44,7 @@ class OrderController extends Controller
             'name' => $order->name,
             'phonenumber' => $order->phonenumber,
             'street' => $order->street,
+            'status' => $order->status,
             'housenumber' => $order->housenumber,
             'created_at' => Carbon::parse($order->created_at)->format('Y-m-d H:i'),
             'items' => $order->items->map(function ($item) {
