@@ -229,7 +229,7 @@ class OrderController extends Controller
                     'quantity'    => $item->quantity,
                     'total_price' => $item->quantity * $product->price,
                     'user_id'     => $order->user_id,
-                    'sale_date'   => now(),
+                    'sold_at'   => now(),
                 ]);
             }
 
