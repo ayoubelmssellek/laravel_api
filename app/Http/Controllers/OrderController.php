@@ -200,32 +200,52 @@ class OrderController extends Controller
     }
 
     public function UpdateOrderStatus(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'status' => 'required|string',
-        ]);
+{
+    $validated = $request->validate([
+        'status' => 'required|string',
+    ]);
 
-        $order = Order::find($id);
+    $order = Order::with('items.product')->find($id); // تأكد من تحميل العلاقات
 
-        if (!$order) {
-            return response()->json([
-                'message' => '❌ الطلب غير موجود',
-            ], 404);
-        }
+    if (!$order) {
+        return response()->json([
+            'message' => '❌ الطلب غير موجود',
+        ], 404);
+    }
 
-        $order->status = $validated['status'];
-        $order->save();
+    $order->status = $validated['status'];
+    $order->save();
 
-        if($validated['status'] === 'delivered') {
-            return response()->json([
-                'message' => '✅ تم تحديث حالة الطلب إلى "تم التوصيل" بنجاح',
-                'order' => $order,
-            ], 200);
-        }
+    // ✅ إذا كان التوصيل تم، نقوم بإنشاء المبيعات وحذف الطلب
+    if ($validated['status'] === 'delivered') {
+        DB::transaction(function () use ($order) {
+            foreach ($order->items as $item) {
+                $product = $item->product;
+
+                Sale::create([
+                    'product_id'  => $product->id,
+                    'category_id' => $product->category_id,
+                    'type_id'     => $product->type_id,
+                    'quantity'    => $item->quantity,
+                    'total_price' => $item->quantity * $product->price,
+                    'user_id'     => $order->user_id,
+                    'sale_date'   => now(),
+                ]);
+            }
+
+            // نحذف الطلب بعد المعالجة
+            $order->delete();
+        });
 
         return response()->json([
-            'message' => '✅ aaaaaaaaaaaaaa تم تحديث حالة الطلب بنجاح',
-            'order' => $order,
+            'message' => '✅ تم تحديث حالة الطلب وإنشاء المبيعات وحذف الطلب بنجاح',
         ], 200);
     }
+
+    return response()->json([
+        'message' => '✅ تم تحديث حالة الطلب بنجاح',
+        'order' => $order,
+    ], 200);
+}
+
 }
