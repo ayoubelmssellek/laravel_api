@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\ItemOrder;
 use App\Models\Notification;
 use Carbon\Carbon;
-
+use App\Models\Sale;
 
 class OrderController extends Controller
 {
