@@ -198,36 +198,33 @@ class OrderController extends Controller
         }
     }
 
-   public function UpdateOrderStatus(Request $request, $id)
-{
-    $validated = $request->validate([
-        'status' => 'required|string',
-    ]);
+    public function UpdateOrderStatus(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string',
+        ]);
 
-    $order = Order::find($id);
+        $order = Order::find($id);
 
-    if (!$order) {
+        if (!$order) {
+            return response()->json([
+                'message' => '❌ الطلب غير موجود',
+            ], 404);
+        }
+
+        $order->status = $validated['status'];
+        $order->save();
+
+        if($validated['status'] === 'delivered') {
+            return response()->json([
+                'message' => '✅ تم تحديث حالة الطلب إلى "تم التوصيل" بنجاح',
+                'order' => $order,
+            ], 200);
+        }
+
         return response()->json([
-            'message' => '❌ الطلب غير موجود',
-        ], 404);
-    }
-
-    $order->status = $validated['status'];
-    $order->save();
-
-    $orderData = $order->toArray(); // نحافظ على البيانات قبل الحذف
-
-    if ($validated['status'] === 'delivered') {
-        return response()->json([
-            'message' => '✅ تم تحديث حالة الطلب إلى "تم التوصيل" بنجاح',
-            'order' => $orderData,
+            'message' => '✅ aaaaaaaaaaaaaa تم تحديث حالة الطلب بنجاح',
+            'order' => $order,
         ], 200);
     }
-
-    return response()->json([
-        'message' => '✅ تم تحديث حالة الطلب بنجاح',
-        'order' => $orderData,
-    ], 200);
-}
-
 }

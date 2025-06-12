@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum', 'manager'])->group(function (){
     Route::apiResource('/type', TypeController::class);
     Route::get('/orders', [OrderController::class, 'GetAllOrders']);
     Route::get('/order/{id}', [OrderController::class, 'GetOrderById']);
-    Route::patch('/order/{id}', [OrderController::class, 'UpdateOrderStatus']);
+    Route::patch('/orderstatut/{id}', [OrderController::class, 'UpdateOrderStatus']);
     Route::patch('/product/{id}', [ProductController::class, 'UpdateProductStatus']);
     Route::patch('/UpdateStatusType/{id}', [TypeController::class, 'updateTypeStatus']);
 
