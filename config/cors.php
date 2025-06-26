@@ -7,7 +7,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'https://gustodakhla.vercel.app',
+        'https://restaurantdakhla.vercel.app',
         'http://localhost:5173', 
     ],
 
